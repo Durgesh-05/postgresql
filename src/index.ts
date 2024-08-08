@@ -56,3 +56,5 @@
 // // We use foreign key in another table to refer to particular table to get data
 
 // Now we are using prisma as orm to understand crud in postgres
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
