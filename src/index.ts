@@ -57,4 +57,79 @@
 
 // Now we are using prisma as orm to understand crud in postgres
 import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import { log } from 'console';
+const { user, todo } = new PrismaClient();
+
+interface User {
+  firstName: string;
+  lastName?: string;
+  email: string;
+  password: string;
+}
+
+// Create user
+async function createUser({ firstName, lastName, email, password }: User) {
+  const res = await user.create({
+    data: {
+      firstName,
+      lastName,
+      email,
+      password,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  console.log(res);
+}
+
+// createUser({
+//   firstName: 'Durgesh',
+//   email: 'durgesh@amazon.com',
+//   password: '12345678',
+// });
+
+// Update User
+async function updateUser(lastName: string, email: string) {
+  const res = await user.update({
+    data: {
+      lastName,
+    },
+    where: {
+      email,
+    },
+  });
+  console.log(res);
+}
+
+// updateUser('Dubey', 'durgesh@google.com');
+
+// Read Users
+async function getUsers() {
+  const res = await user.findMany({});
+  console.log(res);
+}
+
+async function getSelectedUser(email: string) {
+  const res = await user.findMany({
+    where: {
+      email,
+    },
+  });
+  console.log(res);
+}
+
+// getUsers();
+// getSelectedUser('durgesh@google.com');
+
+// Delete User
+async function deleteUser(email: string) {
+  const res = await user.delete({
+    where: {
+      email,
+    },
+  });
+  console.log(res);
+}
+deleteUser('durgesh@amazon.com');
