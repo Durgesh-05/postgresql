@@ -57,7 +57,6 @@
 
 // Now we are using prisma as orm to understand crud in postgres
 import { PrismaClient } from '@prisma/client';
-import { log } from 'console';
 const { user, todo } = new PrismaClient();
 
 interface User {
@@ -132,4 +131,54 @@ async function deleteUser(email: string) {
   });
   console.log(res);
 }
-deleteUser('durgesh@amazon.com');
+// deleteUser('durgesh@amazon.com');
+
+async function getTodo(userId: number) {
+  const todos = await todo.findMany({
+    where: {
+      userId,
+    },
+  });
+  console.log('Todo List: ', todos);
+}
+// getTodo(1);
+
+async function getTodoAndUserDetails(userId: number) {
+  const data = await todo.findMany({
+    where: {
+      userId,
+    },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      completeStatus: true,
+      user: true,
+    },
+  });
+  console.log(data);
+}
+
+getTodoAndUserDetails(1);
+
+interface Todo {
+  title: string;
+  description: string;
+  userId: number;
+}
+
+async function addTodo({ title, description, userId }: Todo) {
+  const res = await todo.create({
+    data: {
+      title,
+      description,
+      userId,
+    },
+  });
+  console.log(res);
+}
+// addTodo({
+//   title: 'Buy Paneer',
+//   description: 'Buy Paneer from the store',
+//   userId: 1,
+// });
